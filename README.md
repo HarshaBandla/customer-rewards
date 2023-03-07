@@ -43,7 +43,7 @@ Given a record of every transaction during a three-month period, calculate the r
 GetRewardsForCustomer ("/customers/{customerId}/rewards")
 
 Using this endpoint users can query for total rewards earned by the customer, can query for the total rewards earned in a month and also in a year.
-The rewards information for the specified customer for the specified month and year. When month and year are not provided, total rewards of customer is returned. When month is provided and year is not provided, rewards for month of current year * is returned.When month is not provided and year is provided, total rewards of customer for that year is returned.
+The rewards information for the specified customer for the specified month and year. When month and year are not provided, total rewards of customer is returned. When month is provided and year is not provided, rewards for month of current year is returned. When month is not provided and year is provided, total rewards of customer for that year is returned.
 
 ### Technologies used
 
