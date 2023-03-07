@@ -1,12 +1,15 @@
 package com.spectrum.customer.rewards.controller;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,16 +38,17 @@ public class RewardsController {
    * for that year is returned.
    */
   @GetMapping("/customers/{customerId}/rewards")
-  public ResponseEntity<Rewards> getRewardsForCustomer(@PathVariable Long customerId,
+  public EntityModel<Rewards> getRewardsForCustomer(@PathVariable Long customerId,
       @RequestParam(required = false) Integer month,
       @RequestParam(required = false) Integer year) {
+    Link self = linkTo(methodOn(RewardsController.class).getRewardsForCustomer(customerId, month, year)).withSelfRel();
     if (month != null) {
-      return new ResponseEntity<>(rewardsService.getRewardsByYearMonth(Month.of(month),
-          Year.of(Optional.ofNullable(year).orElseGet(() -> LocalDate.now().getYear())), customerId), HttpStatus.OK);
+      return EntityModel.of(rewardsService.getRewardsByYearMonth(Month.of(month),
+          Year.of(Optional.ofNullable(year).orElseGet(() -> LocalDate.now().getYear())), customerId), self);
     } else if (year != null) {
-      return new ResponseEntity<>(rewardsService.getRewardsByYear(Year.of(year), customerId), HttpStatus.OK);
+      return EntityModel.of(rewardsService.getRewardsByYear(Year.of(year), customerId), self);
     } else {
-      return new ResponseEntity<>(rewardsService.getTotalRewards(customerId), HttpStatus.OK);
+      return EntityModel.of(rewardsService.getTotalRewards(customerId), self);
     }
   }
 

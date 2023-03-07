@@ -1,5 +1,7 @@
 package com.spectrum.customer.rewards.model;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.spectrum.customer.rewards.entity.Customer;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -9,7 +11,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 @Builder
-public class CustomerResource {
+public class CustomerResource extends RepresentationModel<CustomerResource> {
 
   private final Long id;
   @NotNull

@@ -1,5 +1,10 @@
 package com.spectrum.customer.rewards.controller;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -28,8 +33,13 @@ public class CustomerController {
   }
 
   @GetMapping("/customers/{customerId}")
-  public ResponseEntity<CustomerResource> getCustomer(@PathVariable Long customerId) {
-    return new ResponseEntity<>(customerService.getCustomer(customerId), HttpStatus.OK);
+  public EntityModel<CustomerResource> getCustomer(@PathVariable Long customerId) {
+    Link customerLink = linkTo(methodOn(CustomerController.class).getCustomer(customerId)).withSelfRel();
+    Link createTransactionLink = linkTo(methodOn(TransactionController.class).saveTransaction(null)).withRel(
+        "transactions.create");
+    Link getRewardsLink = linkTo(methodOn(RewardsController.class).getRewardsForCustomer(customerId, null, null))
+        .withRel("customer.rewards");
+    return EntityModel.of(customerService.getCustomer(customerId), customerLink, createTransactionLink, getRewardsLink);
   }
 
   @DeleteMapping("/customers/{customerId}")
@@ -39,9 +49,15 @@ public class CustomerController {
   }
 
   @PutMapping("/customers/{customerId}")
-  public ResponseEntity<CustomerResource> updateCustomer(@PathVariable Long customerId,
+  public EntityModel<CustomerResource> updateCustomer(@PathVariable Long customerId,
       @RequestBody @Validated CustomerResource customerResource) {
-    return new ResponseEntity<>(customerService.updateCustomer(customerId, customerResource), HttpStatus.OK);
+    Link customerLink = linkTo(methodOn(CustomerController.class).getCustomer(customerId)).withSelfRel();
+    Link createTransactionLink = linkTo(methodOn(TransactionController.class).saveTransaction(null)).withRel(
+        "transactions.create");
+    Link getRewardsLink = linkTo(methodOn(RewardsController.class).getRewardsForCustomer(customerId, null, null))
+        .withRel("customer.rewards");
+    return EntityModel.of(customerService.updateCustomer(customerId, customerResource), customerLink,
+        createTransactionLink, getRewardsLink);
   }
 
 }

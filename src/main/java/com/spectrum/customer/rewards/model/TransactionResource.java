@@ -2,6 +2,8 @@ package com.spectrum.customer.rewards.model;
 
 import java.time.LocalDate;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.spectrum.customer.rewards.entity.Transaction;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -11,7 +13,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 @Builder
-public class TransactionResource {
+public class TransactionResource extends RepresentationModel<TransactionResource> {
 
   private final Long id;
   @NotNull
